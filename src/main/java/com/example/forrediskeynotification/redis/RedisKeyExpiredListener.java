@@ -1,5 +1,7 @@
 package com.example.forrediskeynotification.redis;
 
+import com.example.forrediskeynotification.service.RedisService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
@@ -25,7 +27,7 @@ public class RedisKeyExpiredListener extends KeyExpirationEventMessageListener {
      */
     @Override
     public void onMessage(Message message, byte[] pattern) {
-
+        RedisService.getNotification(message.toString());
         System.out.println("########## onMessage pattern " + new String(pattern) + " | " + message.toString());
     }
 }
