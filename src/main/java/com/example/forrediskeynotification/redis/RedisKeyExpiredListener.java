@@ -10,13 +10,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisKeyExpiredListener extends KeyExpirationEventMessageListener {
 
+    private final RedisService redisService;
+
     /**
      * Creates new {@link MessageListener} for {@code __keyEvent@*__:expired} messages.
      *
      * @param listenerContainer must not be {@literal null}.
      */
-    public RedisKeyExpiredListener(RedisMessageListenerContainer listenerContainer) {
+    public RedisKeyExpiredListener(
+        RedisMessageListenerContainer listenerContainer,
+        RedisService redisService
+    ) {
         super(listenerContainer);
+        this.redisService = redisService;
     }
 
     /**
@@ -25,7 +31,6 @@ public class RedisKeyExpiredListener extends KeyExpirationEventMessageListener {
      */
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        RedisService.getNotification(message.toString());
-        System.out.println("########## onMessage pattern " + new String(pattern) + " | " + message);
+        redisService.getNotification(message.toString());
     }
 }

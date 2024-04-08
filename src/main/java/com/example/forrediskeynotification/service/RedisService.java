@@ -26,7 +26,7 @@ public class RedisService {
         return cacheValue;
     }
 
-    public static void getNotification(String message) {
+    public void getNotification(String message) {
         System.out.println("########## 시간이 만료된 키 : " + message);
     }
 }
