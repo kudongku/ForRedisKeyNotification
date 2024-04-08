@@ -1,6 +1,8 @@
 package com.example.forrediskeynotification.redis;
 
+import com.example.forrediskeynotification.dto.ExpiredAuction;
 import com.example.forrediskeynotification.service.RedisService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
@@ -10,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisKeyExpiredListener extends KeyExpirationEventMessageListener {
 
-    private final RedisService redisService;
+    private final ApplicationEventPublisher publisher;
 
     /**
      * Creates new {@link MessageListener} for {@code __keyEvent@*__:expired} messages.
@@ -19,10 +21,10 @@ public class RedisKeyExpiredListener extends KeyExpirationEventMessageListener {
      */
     public RedisKeyExpiredListener(
         RedisMessageListenerContainer listenerContainer,
-        RedisService redisService
+        ApplicationEventPublisher publisher
     ) {
         super(listenerContainer);
-        this.redisService = redisService;
+        this.publisher = publisher;
     }
 
     /**
@@ -31,6 +33,7 @@ public class RedisKeyExpiredListener extends KeyExpirationEventMessageListener {
      */
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        redisService.getNotification(message.toString());
+        System.out.println("########## 시간이 만료된 키 : " + message);
+        publisher.publishEvent(new ExpiredAuction(message.toString()));
     }
 }

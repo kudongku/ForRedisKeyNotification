@@ -1,7 +1,9 @@
 package com.example.forrediskeynotification.service;
 
+import com.example.forrediskeynotification.dto.ExpiredAuction;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,8 @@ public class RedisService {
         return cacheValue;
     }
 
-    public void getNotification(String message) {
-        System.out.println("########## 시간이 만료된 키 : " + message);
+    @EventListener
+    public void getNotification(ExpiredAuction expiredAuction) {
+        System.out.println("########## EventListener : " + expiredAuction.getMessage());
     }
 }
